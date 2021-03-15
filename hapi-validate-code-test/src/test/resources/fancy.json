@@ -1,0 +1,23 @@
+{
+	"resourceType": "CodeSystem",
+	"id": "my-fancy-code-system",
+	"url": "http://my-fancy-code-system.org",
+	"version": "0.1",
+	"name": "FANCY",
+	"title": "FANCY Codes",
+	"status": "active",
+	"date": "2020-04-01",
+	"caseSensitive": false,
+	"content": "fragment",
+	"count": 2,
+	"concept": [
+		{
+			"code": "fancy-one",
+			"display": "One of the most fanciest codes ever"
+		},
+		{
+			"code": "fancy-two",
+			"display": "Probably THE fanciest code ever"
+		}
+	]
+}
