@@ -1,0 +1,23 @@
+{
+  "resourceType": "ValueSet",
+  "id": "my-fancy-value-set",
+  "url": "http://my-fancy-code-system.org/value-set",
+  "version": "1.0.0",
+	"name": "FANCY Set",
+	"title": "FANCY ValueSet",
+  "status": "draft",
+  "date": "2020-04-17",
+  "compose": {
+    "include": [
+      {
+        "system": "http://my-fancy-code-system.org",
+        "concept": [
+          {
+            "code": "fancy-two",
+            "display": "Probably THE fanciest code ever"
+          }
+        ]
+      }
+    ]
+  }
+}

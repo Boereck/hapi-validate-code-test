@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.InputStream;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.CodeSystem;
 import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.IdType;
@@ -18,12 +17,16 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 
+/**
+ * Before running this test, start the HAPI docker container with command: <br>
+ * <code>docker run -it -p 8080:8080 --rm hapiproject/hapi:latest</code>
+ */
 class CodeSystemValidateTest {
 
   private static final String SERVER_BASE = "http://localhost:8080/fhir";
   private static final String CODE_SYSTEM_PATH = "/fancy.json";
 
-  @Test()
+  @Test
   void testOnValidationOnInstance() {
 
     FhirContext context = FhirContext.forR4();
@@ -31,7 +34,7 @@ class CodeSystemValidateTest {
     IGenericClient client = createClient(context);
     IParser jsonParser = context.newJsonParser().setPrettyPrint(true);
 
-    CodeSystem codeSystem = loadTestResource(context);
+    CodeSystem codeSystem = loadCodeSystem(context);
 
     MethodOutcome updateOutcome = client.update().resource(codeSystem).execute();
     // MethodOutcome updateOutcome = client.create().resource(codeSystem).execute();
@@ -40,7 +43,10 @@ class CodeSystemValidateTest {
     String updateResultStr = jsonParser.encodeResourceToString(updateResultResource);
     System.err.println(updateResultStr);
 
-    Parameters parameters = new Parameters().addParameter("code", new CodeType("fancy-two"));
+    Parameters parameters =
+        new Parameters()
+            // .addParameter("system", codeSystem.getUrlElement())
+            .addParameter("code", new CodeType("fancy-two"));
 
     IdType codeSystemId = codeSystem.getIdElement().toUnqualifiedVersionless();
     // IIdType codeSystemId = updateResultResource.getIdElement();
@@ -55,7 +61,7 @@ class CodeSystemValidateTest {
     System.err.println(jsonParser.encodeResourceToString(validationResult));
 
     boolean result = validationResult.getParameterBool("result");
-    assertTrue(result);
+    assertTrue(result); // this fails
   }
 
   @Test
@@ -66,7 +72,7 @@ class CodeSystemValidateTest {
     IGenericClient client = createClient(context);
     IParser jsonParser = context.newJsonParser().setPrettyPrint(true);
 
-    CodeSystem codeSystem = loadTestResource(context);
+    CodeSystem codeSystem = loadCodeSystem(context);
 
     MethodOutcome updateOutcome = client.update().resource(codeSystem).execute();
     //    MethodOutcome updateOutcome = client.create().resource(codeSystem).execute();
@@ -91,7 +97,7 @@ class CodeSystemValidateTest {
     System.err.println(jsonParser.encodeResourceToString(validationResult));
 
     boolean result = validationResult.getParameterBool("result");
-    assertTrue(result);
+    assertTrue(result); // this fails
   }
 
   private IGenericClient createClient(FhirContext context) {
@@ -104,7 +110,7 @@ class CodeSystemValidateTest {
     return client;
   }
 
-  private CodeSystem loadTestResource(FhirContext context) {
+  private CodeSystem loadCodeSystem(FhirContext context) {
     IParser jsonParser = context.newJsonParser();
     InputStream resourceAsStream = getClass().getResourceAsStream(CODE_SYSTEM_PATH);
     return jsonParser.parseResource(CodeSystem.class, resourceAsStream);
