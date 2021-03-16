@@ -20,7 +20,7 @@ import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
  * Before running this test, start the HAPI docker container with command: <br>
  * <code>docker run -it -p 8080:8080 --rm hapiproject/hapi:latest</code>
  */
-public class ValueSetTest {
+public class ValueSetValidateTest {
 
   private static final String SERVER_BASE = "http://localhost:8080/fhir";
   private static final String CODE_SYSTEM_PATH = "/fancy.json";
@@ -40,9 +40,11 @@ public class ValueSetTest {
     client.update().resource(codeSystem).execute();
     client.update().resource(valueSet).execute();
 
+    String code = valueSet.getCompose().getIncludeFirstRep().getConceptFirstRep().getCode();
+
     Parameters parameters =
         new Parameters()
-            .addParameter("code", new CodeType("fancy-two"))
+            .addParameter("code", new CodeType(code))
             .addParameter("system", codeSystem.getUrlElement());
 
     IdType valueSetId = valueSet.getIdElement().toUnqualifiedVersionless();

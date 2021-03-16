@@ -43,10 +43,12 @@ class CodeSystemValidateTest {
     String updateResultStr = jsonParser.encodeResourceToString(updateResultResource);
     System.err.println(updateResultStr);
 
+    String code = codeSystem.getConceptFirstRep().getCode();
+
     Parameters parameters =
         new Parameters()
             // .addParameter("system", codeSystem.getUrlElement())
-            .addParameter("code", new CodeType("fancy-two"));
+            .addParameter("code", new CodeType(code));
 
     IdType codeSystemId = codeSystem.getIdElement().toUnqualifiedVersionless();
     // IIdType codeSystemId = updateResultResource.getIdElement();
@@ -81,10 +83,12 @@ class CodeSystemValidateTest {
     String updateResultStr = jsonParser.encodeResourceToString(updateResultResource);
     System.err.println(updateResultStr);
 
+    String code = codeSystem.getConceptFirstRep().getCode();
+
     Parameters parameters =
         new Parameters()
             .addParameter("url", codeSystem.getUrlElement())
-            .addParameter("code", new CodeType("fancy-two"));
+            .addParameter("code", new CodeType(code));
 
     Parameters validationResult =
         client
